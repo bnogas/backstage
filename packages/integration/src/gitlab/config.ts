@@ -20,6 +20,7 @@ import { isValidHost, isValidUrl } from '../helpers';
 
 const GITLAB_HOST = 'gitlab.com';
 const GITLAB_API_BASE_URL = 'https://gitlab.com/api/v4';
+const GITLAB_API_BASE_PATH = '/api/v4';
 
 /**
  * The configuration parameters for a single GitLab integration.
@@ -70,16 +71,16 @@ export function readGitLabIntegrationConfig(
   const token = config.getOptionalString('token');
   let baseUrl = config.getOptionalString('baseUrl');
 
-  if (apiBaseUrl) {
-    apiBaseUrl = trimEnd(apiBaseUrl, '/');
-  } else if (host === GITLAB_HOST) {
-    apiBaseUrl = GITLAB_API_BASE_URL;
-  }
-
   if (baseUrl) {
     baseUrl = trimEnd(baseUrl, '/');
   } else {
     baseUrl = `https://${host}`;
+  }
+
+  if (apiBaseUrl) {
+    apiBaseUrl = trimEnd(apiBaseUrl, '/');
+  } else {
+    apiBaseUrl = `${baseUrl}${GITLAB_API_BASE_PATH}`;
   }
 
   if (host.includes(':')) {
